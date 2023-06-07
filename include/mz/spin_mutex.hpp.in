@@ -1,0 +1,36 @@
+//----------------------------------------------------------------------------------------------------------------------
+//
+// {% namespaces::main %}::spin_mutex
+// https://github.com/marzer/spin_mutex
+// SPDX-License-Identifier: MIT
+//
+//----------------------------------------------------------------------------------------------------------------------
+//% generated_header_preamble
+//----------------------------------------------------------------------------------------------------------------------
+#ifndef {% macros::prefix %}SPIN_MUTEX_HPP
+#define {% macros::prefix %}SPIN_MUTEX_HPP
+
+#define {% macros::prefix %}SPIN_MUTEX_VERSION_MAJOR 1
+#define {% macros::prefix %}SPIN_MUTEX_VERSION_MINOR 0
+#define {% macros::prefix %}SPIN_MUTEX_VERSION_PATCH 0
+
+//% preprocessor::compilers
+//% preprocessor::arch
+//% preprocessor::has_builtin
+//% preprocessor::has_attr
+//% preprocessor::has_cpp_attr
+//% preprocessor::attr
+//% preprocessor::nodiscard
+//% preprocessor::always_inline
+//% preprocessor::delete_class_defaults
+//% preprocessor::pause
+
+#include <atomic>
+
+namespace {% namespaces::main %}
+{
+	//% spin_mutex
+}
+
+
+#endif // {% macros::prefix %}SPIN_MUTEX_HPP
