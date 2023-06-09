@@ -2,7 +2,8 @@
 
 A `std::mutex`-compatible mutex class implemented using atomic spin-waiting.
 
-Based on Erik Rigtorp's article [Correctly implementing a spinlock in C++], with minor changes.
+Based on Erik Rigtorp's article [Correctly implementing a spinlock in C++] and incorporating some advice from
+the [Intel 64 and IA-32 Architectures Optimization Reference Manual].
 
 Requires C++11.
 
@@ -67,3 +68,4 @@ I will then propagate them to this satellite library when they are merged.
 [gitter]: https://gitter.im/marzer/community
 [sponsor]: https://github.com/sponsors/marzer
 [Correctly implementing a spinlock in C++]: https://rigtorp.se/spinlock/
+[Intel 64 and IA-32 Architectures Optimization Reference Manual]: https://software.intel.com/sites/default/files/managed/9e/bc/64-ia-32-architectures-optimization-manual.pdf

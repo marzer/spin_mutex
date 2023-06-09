@@ -21,8 +21,6 @@
 //% preprocessor::has_cpp_attr
 //% preprocessor::attr
 //% preprocessor::nodiscard
-//% preprocessor::always_inline
-//% preprocessor::delete_class_defaults
 //% preprocessor::pause
 
 #include <atomic>

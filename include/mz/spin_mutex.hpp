@@ -6,7 +6,7 @@
 //
 //----------------------------------------------------------------------------------------------------------------------
 //         THIS FILE WAS ASSEMBLED FROM MULTIPLE HEADER FILES BY A SCRIPT - PLEASE DON'T EDIT IT DIRECTLY
-//                              upstream: 59c69d017faf7fdd164eed28ec5d4f4bc144bfdb
+//                              upstream: 4d0991fb8dd0c440c0d6c2ab33941ce76ce3c41d
 //----------------------------------------------------------------------------------------------------------------------
 //
 // MIT License
@@ -215,29 +215,6 @@
 	#endif
 #endif
 
-#ifndef MZ_ALWAYS_INLINE
-	#if MZ_MSVC_LIKE
-		#define MZ_ALWAYS_INLINE __forceinline
-	#elif MZ_CLANG || MZ_GCC_LIKE || MZ_HAS_ATTR(__always_inline__)
-		#define MZ_ALWAYS_INLINE                                                                                       \
-			MZ_ATTR(__always_inline__)                                                                                 \
-			inline
-	#else
-		#define MZ_ALWAYS_INLINE inline
-	#endif
-#endif
-
-#ifndef MZ_DELETE_MOVE
-	#define MZ_DELETE_MOVE(T)                                                                                          \
-		T(T&&)			  = delete;                                                                                    \
-		T& operator=(T&&) = delete
-#endif
-#ifndef MZ_DELETE_COPY
-	#define MZ_DELETE_COPY(T)                                                                                          \
-		T(const T&)			   = delete;                                                                               \
-		T& operator=(const T&) = delete
-#endif
-
 // msvc-specific
 #if !defined(MZ_PAUSE) && MZ_MSVC
 	#if MZ_ARCH_X86 || MZ_ARCH_AMD64
@@ -281,18 +258,23 @@ namespace mz
 	{
 		// implementation is based on this article:
 		// https://rigtorp.se/spinlock/
+		//
+		// increasing spin-wait backoff based on "Intel 64 and IA-32 Architectures Optimization Reference Manual":
+		// https://software.intel.com/sites/default/files/managed/9e/bc/64-ia-32-architectures-optimization-manual.pdf
 
 	  private:
 		std::atomic_bool held_;
 
 	  public:
 		MZ_NODISCARD_CTOR
-		spin_mutex() noexcept = default;
+		spin_mutex() noexcept //
+			: held_{ false }
+		{}
 
-		~spin_mutex() noexcept = default;
-
-		MZ_DELETE_COPY(spin_mutex);
-		MZ_DELETE_MOVE(spin_mutex);
+		spin_mutex(const spin_mutex&)			 = delete;
+		spin_mutex& operator=(const spin_mutex&) = delete;
+		spin_mutex(spin_mutex&&)				 = delete;
+		spin_mutex& operator=(spin_mutex&&)		 = delete;
 
 		void lock() noexcept
 		{
@@ -310,14 +292,12 @@ namespace mz
 		}
 
 		MZ_NODISCARD
-		MZ_ALWAYS_INLINE
 		bool try_lock() noexcept
 		{
 			return !held_.load(std::memory_order_relaxed) //
 				&& !held_.exchange(true, std::memory_order_acquire);
 		}
 
-		MZ_ALWAYS_INLINE
 		void unlock() noexcept
 		{
 			held_.store(false, std::memory_order_release);
